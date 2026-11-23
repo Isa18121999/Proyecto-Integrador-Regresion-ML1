@@ -94,7 +94,9 @@ Estimación por mínimos cuadrados ordinarios:
 
 El modelo explica 71.39% de la variación observada en ventas (R² = 0.714; R² ajustado = 0.711). La prueba F global es 221.44 con p-valor 4.39e-95, por lo que se rechaza la hipótesis nula de que todos los coeficientes promocionales sean simultáneamente cero en esta especificación.
 
-Manteniendo constantes los demás predictores, una acción adicional de Display se asocia con 154.80 unidades adicionales de ventas semanales (p < 0.001); una acción de Display + Folleto, con 358.20 (p < 0.001); y una acción de Lote/Pack, con 614.50 (p < 0.001). El coeficiente de Folleto es 12.10, pero no es estadísticamente significativo (p = 0.659) al controlar por los otros formatos.
+Con los errores estándar convencionales OLS, manteniendo constantes los demás predictores, una acción adicional de Display se asocia con 154.80 unidades adicionales de ventas semanales; una acción de Display + Folleto, con 358.20; y una acción de Lote/Pack, con 614.50. Sus p-valores OLS son inferiores a 0.001. El coeficiente de Folleto es 12.10 y no es estadísticamente significativo (p = 0.659) al controlar por los otros formatos.
+
+Al aplicar errores estándar HAC/Newey–West con cuatro rezagos, Display mantiene significancia estadística (p = 4.88e-24), Display + Folleto (p = 0.0081) y Lote/Pack (p = 0.0145) también permanecen significativos al 5%; Folleto no es significativo (p = 0.767). Por tanto, la inferencia robusta conserva la evidencia para tres formatos, aunque con errores estándar mayores que los OLS convencionales.
 
 Estos coeficientes son cambios asociados por unidad de conteo de cada promoción; no deben compararse sin considerar la frecuencia y escala de cada variable. En particular, una acción combinada puede requerir mayor inversión que una exhibición simple, información que no está incluida en la base.
 
@@ -141,7 +143,7 @@ El error cuadrático medio de raíz (RMSE) dentro de la muestra es 15,032 unidad
 
 1. La base incluye 360 semanas de información entre 2010 y 2016, sin valores faltantes en las variables disponibles.
 2. El modelo lineal múltiple seleccionado presenta un R² de 0.714 y una prueba F global significativa, lo que indica que los tipos de promoción considerados aportan información conjunta para explicar la variación semanal de ventas.
-3. Display, Display + Folleto y Lote/Pack muestran asociaciones positivas y estadísticamente significativas en la especificación estimada. Folleto no presenta evidencia de asociación incremental una vez controlados los demás formatos.
+3. Con inferencia HAC/Newey–West de cuatro rezagos, Display, Display + Folleto y Lote/Pack mantienen asociaciones positivas estadísticamente significativas al 5%. Folleto no presenta evidencia de asociación incremental una vez controlados los demás formatos.
 4. Los resultados no deben interpretarse como efectos causales ni convertirse directamente en previsiones de rentabilidad, porque no se observan costos, márgenes, precios ni asignación experimental.
 5. La autocorrelación, heterocedasticidad y falta de normalidad residual limitan la inferencia OLS convencional. Se necesita un modelo temporal con errores robustos y evaluación fuera de muestra.
 6. La recomendación principal es priorizar experimentos medibles para Display y acciones combinadas/pack, ampliar la captura de información comercial y utilizar el análisis como apoyo a decisiones, no como regla automática de inversión.
