@@ -39,6 +39,9 @@ def main():
     model = sm.OLS(y, X).fit()
     # Errores estándar HAC/Newey-West para complementar inferencia OLS.
     hac = model.get_robustcov_results(cov_type="HAC", maxlags=4)
+    # Contrastes conjuntos robustos para H1 y H2, sobre los cuatro predictores incluidos.
+    h1_robust = hac.f_test("DispRB=0, FollRB=0, DisfoRB=0, LoteRB=0")
+    h2_robust = hac.f_test("DispRB=FollRB, DispRB=DisfoRB, DispRB=LoteRB")
 
     output = df.copy()
     output["Ventas_estimadas"] = model.predict(X)
@@ -70,6 +73,10 @@ def main():
         ("Breusch_Pagan_LM", bp[0]), ("Breusch_Pagan_p", bp[1]),
         ("Breusch_Godfrey_LM", bg[0]), ("Breusch_Godfrey_p", bg[1]),
         ("Jarque_Bera", jb[0]), ("Jarque_Bera_p", jb[1]),
+        ("H1_F_HAC_4lags", float(h1_robust.fvalue)),
+        ("H1_p_HAC_4lags", float(h1_robust.pvalue)),
+        ("H2_equal_slopes_F_HAC_4lags", float(h2_robust.fvalue)),
+        ("H2_equal_slopes_p_HAC_4lags", float(h2_robust.pvalue)),
     ] + [(f"VIF_{k}", v) for k, v in vif.items()]
     pd.DataFrame(diagnostics, columns=["metrica", "valor"]).to_csv(RESULTS / "diagnosticos.csv", index=False)
 
