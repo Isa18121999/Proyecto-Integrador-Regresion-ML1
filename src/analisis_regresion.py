@@ -11,6 +11,7 @@ import statsmodels.api as sm
 from statsmodels.stats.stattools import durbin_watson, jarque_bera
 from statsmodels.stats.diagnostic import het_breuschpagan, acorr_breusch_godfrey
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from statsmodels.graphics.tsaplots import plot_acf
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
@@ -80,6 +81,14 @@ def main():
     ] + [(f"VIF_{k}", v) for k, v in vif.items()]
     pd.DataFrame(diagnostics, columns=["metrica", "valor"]).to_csv(RESULTS / "diagnosticos.csv", index=False)
 
+    # Estadística descriptiva y frecuencia de ceros por variable.
+    desc = df[[TARGET, *FEATURES, "CanexRB", "CupoRB"]].describe().T
+    desc["ceros"] = (df[[TARGET, *FEATURES, "CanexRB", "CupoRB"]] == 0).sum()
+    desc.to_csv(RESULTS / "estadisticos_descriptivos.csv", encoding="utf-8-sig")
+    df.groupby("año")[TARGET].agg(["count", "mean", "min", "max"]).to_csv(
+        RESULTS / "ventas_por_anio.csv", encoding="utf-8-sig"
+    )
+
     # Validación temporal: entrenar 2010-2015 y evaluar el año 2016.
     train, test = df["año"] < 2016, df["año"] == 2016
     if train.any() and test.any():
@@ -111,6 +120,15 @@ def main():
     plt.title("Residuos frente a valores ajustados")
     plt.xlabel("Valores ajustados"); plt.ylabel("Residuos"); plt.tight_layout()
     plt.savefig(FIGURES / "residuos.png", dpi=160); plt.close()
+
+    # Función de autocorrelación residual para evaluar dependencia temporal.
+    fig, ax = plt.subplots(figsize=(9, 5))
+    plot_acf(model.resid, lags=30, ax=ax)
+    ax.set_title("Autocorrelación de residuos (30 rezagos)")
+    ax.set_xlabel("Rezago (semanas)")
+    fig.tight_layout()
+    fig.savefig(FIGURES / "acf_residuos.png", dpi=160)
+    plt.close(fig)
 
     corr = df[[TARGET, *FEATURES]].corr()
     plt.figure(figsize=(7, 6))
