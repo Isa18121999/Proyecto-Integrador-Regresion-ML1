@@ -108,9 +108,11 @@ Estos coeficientes son cambios asociados por unidad de conteo de cada promoción
 
 ### 5.4 Contraste de hipótesis
 
-**H1:** respaldada para el modelo estimado. La prueba F global resulta significativa (p < 0.001), indicando que, en conjunto, los predictores seleccionados aportan información estadística para explicar las ventas.
+Para atender los problemas de autocorrelación y heterocedasticidad se complementó la inferencia OLS con errores estándar HAC/Newey–West (4 rezagos) y pruebas F robustas sobre los cuatro predictores incluidos en el modelo.
 
-**H2:** no queda resuelta de forma concluyente con una comparación informal de coeficientes. El hecho de que algunos p-valores sean significativos y otros no no demuestra que los efectos sean distintos entre sí. Para contrastarla correctamente se requiere una prueba de restricciones lineales entre coeficientes, idealmente con errores estándar robustos que contemplen la dependencia temporal. Dado que el diagnóstico detecta autocorrelación y heterocedasticidad, se recomienda reportar H2 como pendiente de confirmación robusta, no como aceptada o rechazada.
+**H1: las promociones influyen en las ventas.** Se rechaza la hipótesis nula conjunta para los cuatro predictores incluidos: F robusta HAC(4) = 44.89; p = 1.69e-30. Esto indica que las variables promocionales incluidas aportan información estadística conjunta en esta especificación. CanexRB y CupoRB no forman parte de esta prueba porque fueron excluidas por su extrema escasez.
+
+**H2: todos los tipos de promoción tienen el mismo efecto sobre las ventas.** Se contrasta la igualdad de las cuatro pendientes mediante restricciones lineales robustas: βDisp = βFoll = βDisfo = βLote. El contraste arroja F robusta HAC(4) = 4.18; p = 0.0063. Al nivel de significancia del 5%, se rechaza la igualdad de los coeficientes entre los cuatro tipos incluidos. Esta conclusión se limita a los formatos presentes en la especificación y compara cambios por unidad de conteo; no implica que tengan igual costo ni igual rentabilidad.
 
 ### 5.5 Diagnóstico y limitaciones
 
